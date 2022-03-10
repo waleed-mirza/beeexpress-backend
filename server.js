@@ -37,6 +37,7 @@ connection.once("open", () => {
 
 const menuRouter = require("./routes/menu");
 const categoryRouter = require("./routes/category");
+const restaurantRouter = require("./routes/restaurant");
 const authRouter = require("./customer routes/auth");
 
 const postRouter = require("./customer routes/posts");
@@ -55,13 +56,15 @@ app.use(
     resave: true,
     saveUninitialized: false,
     cookie: {
-      expires: 60 * 60 * 24,
+      expires: 1000 * 60 * 60 * 60,
     },
   })
 );
 
 app.use("/menu", menuRouter);
 app.use("/category", categoryRouter);
+app.use("/restaurant", restaurantRouter);
+
 app.use("/posts", postRouter);
 app.use("/auth", authRouter);
 

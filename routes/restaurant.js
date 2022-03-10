@@ -1,16 +1,17 @@
 const router = require("express").Router();
-let Category = require("../models/category.model");
+let Restaurant = require("../models/restaurant.model");
 
-router.route("/").get((req, res) => {
-  Category.find()
-    .then((category) => res.json(category))
+router.route("/getall").get((req, res) => {
+  Restaurant.find()
+    .then((restaurant) => res.json(restaurant))
     .catch((err) => res.status(400).json("Error: " + err));
 });
+
 router.route("/searchbyid").post((req, res) => {
   const managerid = req.body.managerid;
-  Category.find({ managerid: managerid })
+  Restaurant.findOne({ managerid: managerid })
     .then((response) => {
-      return res.json({ result: response });
+      return res.json({ result: response.restaurant });
     })
     .catch((err) => {
       res.json({ status: "somthing went wrong" });
@@ -18,14 +19,14 @@ router.route("/searchbyid").post((req, res) => {
 });
 
 router.route("/add").post((req, res) => {
-  const category = req.body.category;
+  const restaurant = req.body.restaurant;
   const managerid = req.body.managerid;
 
-  const newCategory = new Category({ category, managerid });
+  const newRestaurant = new Restaurant({ restaurant, managerid });
 
-  newCategory
+  newRestaurant
     .save()
-    .then(() => res.json("Category added!"))
+    .then(() => res.json("Restaurant added!"))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 module.exports = router;

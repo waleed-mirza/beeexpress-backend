@@ -17,6 +17,36 @@ const signupSchema = new Schema(
       trim: true,
       minlength: 3,
     },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 3,
+    },
+    mobilenumber: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 3,
+    },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 3,
+    },
+    CNIC: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 3,
+    },
+    userrole: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 3,
+    },
   },
   {
     timestamps: true,

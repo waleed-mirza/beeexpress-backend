@@ -3,22 +3,15 @@ const User = require("../customer models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { registerValidation, loginValidation } = require("../validation");
+const verify = require("./verifyToken");
 
 const express = require("express");
 const app = express();
 const cors = require("cors");
 
-// const bodyParser = require("body-parser");
-// const cookieParser = require("cookie-parser");
-// const session = require("express-session");
-
 //REGISTER
 
 router.post("/register", async (req, res) => {
-  //   Signup.find()
-  //     .then((signup) => res.json(signup))
-  //     .catch((err) => res.status(400).json("Error: " + err));
-
   //Validating data
   const { error } = registerValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -35,6 +28,11 @@ router.post("/register", async (req, res) => {
   const user = new User({
     email: req.body.email,
     password: hashedPassword,
+    name: req.body.name,
+    mobilenumber: req.body.mobilenumber,
+    city: req.body.city,
+    CNIC: req.body.CNIC,
+    userrole: req.body.userrole,
   });
   try {
     const savedUser = await user.save();
@@ -45,21 +43,6 @@ router.post("/register", async (req, res) => {
 });
 
 //LOGIN
-
-// app.use(cookieParser());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// app.use(
-//   session({
-//     key: "userID",
-//     secret: "jashdjahdj",
-//     resave: true,
-//     saveUninitialized: false,
-//     cookie: {
-//       expires: 60 * 60 * 24,
-//     },
-//   })
-// );
 
 router.post("/login", async (req, res) => {
   //Validating data
@@ -76,27 +59,12 @@ router.post("/login", async (req, res) => {
   if (!validPass) {
     return res.json({ auth: false, message: "Password is wrong" });
   }
-  // if (!validPass) return res.status(400).send("Password is wrong");
-
-  // if (!user || !validPass) {
-  //   return res.send({ user, message: "Email or Password is wrong" });
-  // }
-
-  // result = user;
-  // req.sessioncookie.user = result;
-  // console.log(req.sessioncookie.user);
-
   //Create and assign a token
   const id = user._id,
     email = user.email;
-  const token = jwt.sign({ id, email }, process.env.TOKEN_SECRET, {
-    expiresIn: 300,
-  });
-  // res.header("auth-token", token).send(token);
-
+  const token = jwt.sign({ id, email }, process.env.TOKEN_SECRET);
   const result = user;
   req.session.user = result;
-  console.log(req.session.user, id);
   res.json({ auth: true, token: token, result: result, email: email });
   // res.send(user);
 });
@@ -108,16 +76,17 @@ router.get("/login", async (req, res) => {
     res.send({ loggedIn: false });
   }
 });
+router.get("/checklogin", verify, async (req, res) => {
+  res.send({ loggedIn: true, id: req.userID });
+});
 
-// router.route("/add").post((req, res) => {
-//   const email = req.body.email;
-//   const password = req.body.password;
+router.get("/logout", async (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return console.log(err);
+    }
+    res.json({ loggedIn: false });
+  });
+});
 
-//   const newUser = new Signup({ email, password });
-
-//   newUser
-//     .save()
-//     .then(() => res.json("User added!"))
-//     .catch((err) => res.status(400).json("Error: " + err));
-// });
 module.exports = router;
