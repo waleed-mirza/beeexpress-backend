@@ -14,11 +14,13 @@ const cors = require("cors");
 router.post("/register", async (req, res) => {
   //Validating data
   const { error } = registerValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error)
+    return res.send({ status: "not ok", message: error.details[0].message });
 
   //Checking if the user is already registered
   const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist) return res.status(400).send("Email already exists");
+  if (emailExist)
+    return res.send({ status: "not ok", message: "Email Already Registered" });
 
   //Hashing the password
   const salt = await bcrypt.genSalt(10);
@@ -36,9 +38,15 @@ router.post("/register", async (req, res) => {
   });
   try {
     const savedUser = await user.save();
-    res.send({ user: user._id });
+    res.send({
+      user: user._id,
+      status: "ok",
+      message: "Succesfully registered",
+    });
   } catch (err) {
-    res.status(400).send(err);
+    res
+      .status(200)
+      .send({ status: "not ok", message: "Something Went Wrong! Try again" });
   }
 });
 
@@ -47,7 +55,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   //Validating data
   const { error } = loginValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(200).send(error.details[0].message);
 
   //Checking if the email exists
   const user = await User.findOne({ email: req.body.email });
