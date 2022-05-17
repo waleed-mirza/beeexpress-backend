@@ -44,8 +44,6 @@ const signupSchema = new Schema(
     userrole: {
       type: String,
       required: true,
-      trim: true,
-      minlength: 3,
     },
   },
   {

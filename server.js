@@ -1,10 +1,12 @@
 const express = require("express");
+const app = express();
 const cors = require("cors");
+const path = require("path");
+
 const mongoose = require("mongoose");
 
 require("dotenv").config();
 
-const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -29,6 +31,7 @@ mongoose.connect(uri, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 const connection = mongoose.connection;
 connection.once("open", () => {
@@ -40,7 +43,9 @@ const categoryRouter = require("./routes/category");
 const restaurantRouter = require("./routes/restaurant");
 const authRouter = require("./customer routes/auth");
 
-const postRouter = require("./customer routes/posts");
+const marqueeRouter = require("./routes/marquee");
+
+const eventorderRouter = require("./routes/eventorder");
 
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -65,8 +70,10 @@ app.use("/menu", menuRouter);
 app.use("/category", categoryRouter);
 app.use("/restaurant", restaurantRouter);
 
-app.use("/posts", postRouter);
 app.use("/auth", authRouter);
+app.use("/marquee", marqueeRouter);
+app.use("/eventorder", eventorderRouter);
+app.use("/files", express.static(path.join(__dirname, "/upload/images")));
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

@@ -9,6 +9,10 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
+const ADMIN_CREDENTIAL = {
+  email: "admin@admin1.com",
+  password: "admin@admin1",
+};
 //REGISTER
 
 router.post("/register", async (req, res) => {
@@ -73,6 +77,7 @@ router.post("/login", async (req, res) => {
   const token = jwt.sign({ id, email }, process.env.TOKEN_SECRET);
   const result = user;
   req.session.user = result;
+
   res.json({ auth: true, token: token, result: result, email: email });
   // res.send(user);
 });
@@ -85,7 +90,15 @@ router.get("/login", async (req, res) => {
   }
 });
 router.get("/checklogin", verify, async (req, res) => {
-  res.send({ loggedIn: true, id: req.userID });
+  let profileData = await User.findOne({ _id: req.userID });
+  let validPass = false;
+  if (profileData.email === ADMIN_CREDENTIAL.email) {
+    validPass = await bcrypt.compare(
+      ADMIN_CREDENTIAL.password,
+      profileData.password
+    );
+  }
+  res.send({ loggedIn: true, id: req.userID, adminCheck: validPass });
 });
 
 router.get("/logout", async (req, res) => {
@@ -97,4 +110,23 @@ router.get("/logout", async (req, res) => {
   });
 });
 
+router.post("/getprofile", async (req, res) => {
+  try {
+    const userId = req.body.userid;
+    const profileData = await User.findOne({ _id: userId }, { password: 0 });
+    if (!profileData)
+      return res
+        .status(200)
+        .json({ status: "not ok", message: "Profile does not exist" });
+    res.status(200).json({
+      status: "ok",
+      message: "Document action succeed",
+      result: profileData,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// admin check
 module.exports = router;
