@@ -7,22 +7,30 @@ router.route("/getall").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-router.route("/searchbyid").post((req, res) => {
-  const managerid = req.body.managerid;
-  Restaurant.findOne({ managerid: managerid })
-    .then((response) => {
-      return res.json({ result: response.restaurant });
-    })
-    .catch((err) => {
-      res.json({ status: "somthing went wrong" });
-    });
+router.route("/searchbyid").post(async (req, res) => {
+  try {
+    const { managerid } = req.body;
+    let query = {};
+    if (managerid) query.managerid = managerid;
+    const result = await Restaurant.find(query);
+    res
+      .status(200)
+      .json({
+        status: "ok",
+        message: "Document action succeed",
+        result: result,
+      });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.route("/add").post((req, res) => {
   const restaurant = req.body.restaurant;
   const managerid = req.body.managerid;
+  const address = req.body.address;
 
-  const newRestaurant = new Restaurant({ restaurant, managerid });
+  const newRestaurant = new Restaurant({ restaurant, address, managerid });
 
   newRestaurant
     .save()

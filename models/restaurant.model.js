@@ -11,6 +11,10 @@ const restaurantSchema = new Schema(
       trim: true,
       minlength: 3,
     },
+    address: {
+      type: String,
+      required: true,
+    },
     managerid: {
       type: String,
       required: true,

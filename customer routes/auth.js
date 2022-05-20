@@ -110,10 +110,31 @@ router.get("/logout", async (req, res) => {
   });
 });
 
+router.post("/updatestatus", async (req, res) => {
+  try {
+    const { userid, status } = req.body;
+    const result = await User.findOneAndUpdate(
+      { _id: userid },
+      { status: status },
+      { new: true }
+    );
+    res.status(200).json({
+      status: "ok",
+      message: "Document action succeed",
+      result: result,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 router.post("/getprofile", async (req, res) => {
   try {
-    const userId = req.body.userid;
-    const profileData = await User.findOne({ _id: userId }, { password: 0 });
+    const { userId, userrole, filter } = req.body;
+    const query = {};
+    if (userId) query._id = userId;
+    if (userrole) query.userrole = userrole;
+    if (filter) query.status = filter;
+    const profileData = await User.find(query, { password: 0 });
     if (!profileData)
       return res
         .status(200)

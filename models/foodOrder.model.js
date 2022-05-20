@@ -2,47 +2,47 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const eventorderschema = new Schema(
+const foodOrderSchema = new Schema(
   {
-    placeid: {
-      type: String,
-      required: true,
-    },
     managerid: {
       type: String,
-      required: true,
     },
     customerid: {
       type: String,
-      required: true,
     },
-    placetype: {
-      type: String,
-      required: true,
+    itemsorder: {
+      type: [String],
+      default: [],
     },
-    eventtype: {
-      type: String,
-      default: "",
-    },
-    noofpersons: {
-      type: Number,
-      default: 0,
-    },
-    eventdate: {
+    paymentmethod: {
       type: String,
       default: "",
     },
-    eventlocation: {
-      type: String,
-      default: "",
-    },
-    orderstatus: {
+    isacceptedfordinein: {
       type: String,
       default: "pending",
     },
+    noofpersons: {
+      type: String,
+      default: "",
+    },
+    isacceptedfordelivery: {
+      type: String,
+      default: "pending",
+    },
+
+    deliveryboyid: {
+      type: String,
+      default: "",
+    },
+    restaurantid: {
+      type: String,
+      default: "",
+    },
+
     isCompleted: {
       type: String,
-      default: "no",
+      default: "pending",
     },
     review: {
       type: Number,
@@ -54,6 +54,6 @@ const eventorderschema = new Schema(
   }
 );
 
-const EventOrder = mongoose.model("EventOrder", eventorderschema);
+const FoodOrder = mongoose.model("FoodOrder", foodOrderSchema);
 
-module.exports = EventOrder;
+module.exports = FoodOrder;
