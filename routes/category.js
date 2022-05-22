@@ -10,6 +10,7 @@ router.route("/searchbyid").post((req, res) => {
   const managerid = req.body.managerid;
   Category.find({ managerid: managerid })
     .then((response) => {
+      console.log(response, "cate");
       return res.json({ result: response });
     })
     .catch((err) => {

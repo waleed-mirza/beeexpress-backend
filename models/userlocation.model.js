@@ -10,11 +10,9 @@ const userlocationSchema = new Schema(
     },
     lat: {
       type: Number,
-      default: 0,
     },
     long: {
       type: Number,
-      default: 0,
     },
   },
   {

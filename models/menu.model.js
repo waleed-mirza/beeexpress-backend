@@ -20,8 +20,6 @@ const menuSchema = new Schema(
     price: {
       type: Number,
       required: true,
-      trim: true,
-      minlength: 3,
     },
     managerid: {
       type: String,

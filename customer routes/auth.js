@@ -9,9 +9,17 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
+const Category = require("../models/category.model");
+const EventOrder = require("../models/eventorder.model");
+const FoodOrder = require("../models/foodOrder.model");
+const UserLocation = require("../models/userlocation.model");
+const Marquee = require("../models/marquee.model");
+const Menu = require("../models/menu.model");
+const Restaurant = require("../models/restaurant.model");
+
 const ADMIN_CREDENTIAL = {
-  email: "admin@admin1.com",
-  password: "admin@admin1",
+  email: "admin@admin.com",
+  password: "admin@admin",
 };
 //REGISTER
 
@@ -144,6 +152,46 @@ router.post("/getprofile", async (req, res) => {
       message: "Document action succeed",
       result: profileData,
     });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+router.post("/updateprofile", async (req, res) => {
+  try {
+    const { email, ...rest } = req.body;
+
+    //Hashing the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(rest.password, salt);
+    rest.password = hashedPassword;
+    let result = await User.findOneAndUpdate({ email: email }, rest, {
+      new: true,
+    });
+    res
+      .status(200)
+      .json({ status: "ok", message: "Updated Succesfully", result: result });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+router.post("/deleteprofile", async (req, res) => {
+  try {
+    const userid = req.body.userId;
+
+    let result = await User.deleteOne({ _id: userid });
+    await Category.deleteMany({ managerid: userid });
+    await EventOrder.deleteMany({ managerid: userid });
+    await EventOrder.deleteMany({ customerid: userid });
+    await FoodOrder.deleteMany({ customerid: userid });
+    await FoodOrder.deleteMany({ managerid: userid });
+    await Marquee.deleteMany({ managerid: userid });
+    await Menu.deleteMany({ managerid: userid });
+    await Restaurant.deleteMany({ managerid: userid });
+    await UserLocation.deleteMany({ userid: userid });
+
+    await res
+      .status(200)
+      .json({ status: "ok", message: "Deleted Succesfully", result: result });
   } catch (err) {
     res.status(500).json(err);
   }

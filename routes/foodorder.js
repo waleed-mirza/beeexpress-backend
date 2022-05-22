@@ -9,7 +9,7 @@ router.post("/create", async (req, res) => {
       managerid,
       paymentmethod,
       isacceptedfordinein,
-      noofperson,
+      noofpersons,
     } = req.body;
 
     let query = {};
@@ -22,7 +22,7 @@ router.post("/create", async (req, res) => {
     } else {
       query.isacceptedfordinein = "cancel";
     }
-    if (noofperson) query.noofpersons = noofperson;
+    if (noofpersons) query.noofpersons = noofpersons;
     FoodOrder.create(query, function (err, result) {
       if (err) return handleError(err);
       console.log(result);
@@ -62,6 +62,8 @@ router.post("/update", async (req, res) => {
       deliveryboyid,
       isacceptedfordinein,
       isCompleted,
+      review,
+      paymentmethod,
     } = req.body;
     const query = {};
     if (isacceptedfordelivery)
@@ -69,11 +71,28 @@ router.post("/update", async (req, res) => {
     if (deliveryboyid) query.deliveryboyid = deliveryboyid;
     if (isacceptedfordinein) query.isacceptedfordinein = isacceptedfordinein;
     if (isCompleted) query.isCompleted = isCompleted;
+    if (review) query.review = review;
+    if (paymentmethod) query.paymentmethod = paymentmethod;
 
+    console.log(query);
     const result = await FoodOrder.findOneAndUpdate({ _id: orderid }, query, {
       new: true,
     });
+    console.log(result, "result");
     query.res.status(200).json({
+      status: "ok",
+      message: "Document action succeed",
+      result: result,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/delete", async (req, res) => {
+  try {
+    const result = await FoodOrder.deleteOne({ _id: req.query.orderid });
+    res.status(200).json({
       status: "ok",
       message: "Document action succeed",
       result: result,

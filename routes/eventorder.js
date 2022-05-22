@@ -88,5 +88,23 @@ router.post("/delete", async (req, res) => {
     res.status(500).json(err);
   }
 });
+router.post("/updatefilters", async (req, res) => {
+  try {
+    const { _id, isCompleted, review } = req.body;
+    let query = {};
+    if (isCompleted) query.isCompleted = isCompleted;
+    if (review) query.review = review;
+    const result = await EventOrder.findOneAndUpdate({ _id: _id }, query, {
+      new: true,
+    });
+    res.status(200).json({
+      status: "ok",
+      message: "Document action succeed",
+      result: result,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;

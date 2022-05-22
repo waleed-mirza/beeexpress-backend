@@ -35,5 +35,17 @@ router.get("/get", async (req, res) => {
     res.status(500).json(err);
   }
 });
+router.get("/locationall", async (req, res) => {
+  try {
+    const result = await UserLocation.find();
+    res.status(200).json({
+      status: "ok",
+      message: "Document action succeed",
+      result: result,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;
