@@ -72,11 +72,9 @@ router.route("/update").post(async (req, res) => {
 // get onc
 router.route("/getbyid").get(async (req, res) => {
   try {
-    const managerid = req.query.managerid;
-    const marqueeid = req.query.marqueeid;
-
-    const query = {};
-    query._id = marqueeid;
+    const { marqueeid, managerid } = req.query;
+    let query = {};
+    if (marqueeid) query._id = marqueeid;
     if (managerid) query.managerid = managerid;
     const marqueeData = await Marquee.find(query);
     res.status(200).json({
