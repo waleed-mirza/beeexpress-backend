@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const multer = require("multer");
-const REQ_URL = require("../customer routes/CONSTANTS");
+const REQ_URL = require("../customer routes/CONSTANTS.js");
 let Menu = require("../models/menu.model");
 
 // image storage ---start
