@@ -41,7 +41,7 @@ connection.once("open", () => {
 const menuRouter = require("./routes/menu");
 const categoryRouter = require("./routes/category");
 const restaurantRouter = require("./routes/restaurant");
-const authRouter = require("./customer routes/auth");
+const authRouter = require("./customer_routes/auth");
 const locationRouter = require("./routes/location");
 
 const marqueeRouter = require("./routes/marquee");

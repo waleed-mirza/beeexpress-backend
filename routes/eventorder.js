@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const REQ_URL = require("../customer routes/CONSTANTS.js");
+const REQ_URL = require("../customer_routes/CONSTANTS.js");
 const Marquee = require("../models/marquee.model");
 const EventOrder = require("../models/eventorder.model");
 
