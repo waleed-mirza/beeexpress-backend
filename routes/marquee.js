@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const REQ_URL = require("../customer routes/CONSTANTS.JS");
+const REQ_URL = require("../customer routes/CONSTANTS.js");
 const Marquee = require("../models/marquee.model");
 var multer = require("multer");
 const express = require("express");
@@ -8,7 +8,6 @@ const path = require("path");
 const fs = require("fs");
 
 // image storage ---start
-
 const storage = multer.diskStorage({
   destination: "./upload/images",
   filename: (req, file, cb) => {

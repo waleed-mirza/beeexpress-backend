@@ -27,6 +27,10 @@ const menuSchema = new Schema(
       trim: true,
       minlength: 3,
     },
+    itemimage: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

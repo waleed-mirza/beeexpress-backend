@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const REQ_URL = require("../customer routes/CONSTANTS.JS");
+const REQ_URL = require("../customer routes/CONSTANTS.js");
 const UserLocation = require("../models/userlocation.model");
 
 router.post("/insert", async (req, res) => {

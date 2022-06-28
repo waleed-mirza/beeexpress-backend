@@ -68,6 +68,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the Application");
+});
+
 app.use("/menu", menuRouter);
 app.use("/category", categoryRouter);
 app.use("/restaurant", restaurantRouter);

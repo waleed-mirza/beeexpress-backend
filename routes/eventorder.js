@@ -1,12 +1,13 @@
 const router = require("express").Router();
-const REQ_URL = require("../customer routes/CONSTANTS.JS");
+const REQ_URL = require("../customer routes/CONSTANTS.js");
 const Marquee = require("../models/marquee.model");
 const EventOrder = require("../models/eventorder.model");
 
 router.post("/create", async (req, res) => {
+  console.log(req.body);
   try {
     EventOrder.create(req.body, function (err, result) {
-      if (err) return handleError(err);
+      if (err) return res.status(500).json(err);
       res.status(200).json({
         status: "ok",
         message: "Document action succeed",

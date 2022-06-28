@@ -1,5 +1,22 @@
 const router = require("express").Router();
+const multer = require("multer");
+const REQ_URL = require("../customer routes/CONSTANTS");
 let Menu = require("../models/menu.model");
+
+// image storage ---start
+const storage = multer.diskStorage({
+  destination: "./upload/images",
+  filename: (req, file, cb) => {
+    return cb(
+      null,
+      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
+const upload = multer({
+  storage: storage,
+});
+// image storage ---end
 
 router.route("/").get((req, res) => {
   Menu.find()
@@ -7,13 +24,15 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
-router.route("/add").post((req, res) => {
+router.route("/add").post(upload.single("itemimage"), async (req, res) => {
+  const itemimage = `${REQ_URL}files/${req.file.filename}`;
+
   const category = req.body.category;
   const menuitem = req.body.menuitem;
   const managerid = req.body.managerid;
   const price = Number(req.body.price);
 
-  const newMenu = new Menu({ category, menuitem, price, managerid });
+  const newMenu = new Menu({ category, menuitem, price, managerid, itemimage });
 
   newMenu
     .save()
