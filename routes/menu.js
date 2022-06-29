@@ -1,7 +1,9 @@
 const router = require("express").Router();
-const multer = require("multer");
+var multer = require("multer");
 const REQ_URL = require("../customer_routes/CONSTANTS.js");
 let Menu = require("../models/menu.model");
+const path = require("path");
+const fs = require("fs");
 
 // image storage ---start
 const storage = multer.diskStorage({
